@@ -1,0 +1,13 @@
+
+### Delete an entry
+DELETE http://localhost:3001/api/persons/3
+
+### Post a new entry
+POST http://localhost:3001/api/persons/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Sample Name",
+    "number": "123456789",
+    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+}
