@@ -1,13 +1,41 @@
 
-### Delete an entry
+### Delete entry with ID 3
 DELETE http://localhost:3001/api/persons/3
 
-### Post a new entry
+### POST a new entry
 POST http://localhost:3001/api/persons/ HTTP/1.1
 content-type: application/json
 
 {
     "name": "Sample Name",
     "number": "123456789",
+    "time": "Thu, 25 May 2023 17:53:00 GMT"
+}
+
+### Try POST with missing name
+POST http://localhost:3001/api/persons/ HTTP/1.1
+content-type: application/json
+
+{
+    "number": "123456789",
+    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+}
+
+### Try POST with missing number
+POST http://localhost:3001/api/persons/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Name WithoutNumber",
+    "time": "Thu, 25 May 2023 17:53:00 GMT"
+}
+
+### Try POST with existing name
+POST http://localhost:3001/api/persons/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Arto Hellas",
+    "number": "111111111111",
     "time": "Wed, 21 Oct 2015 18:27:50 GMT"
 }
