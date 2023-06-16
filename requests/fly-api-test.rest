@@ -1,0 +1,43 @@
+# Get all persons
+GET https://fkfso-phonebook.fly.dev/api/persons
+
+### Delete entry with ID 3
+DELETE https://fkfso-phonebook.fly.dev/api/persons3
+
+### POST a new entry
+POST https://fkfso-phonebook.fly.dev/api/persons HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Sample Name",
+    "number": "123456789",
+    "time": "Thu, 25 May 2023 17:53:00 GMT"
+}
+
+### Try POST with missing name
+POST https://fkfso-phonebook.fly.dev/api/persons HTTP/1.1
+content-type: application/json
+
+{
+    "number": "123456789",
+    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+}
+
+### Try POST with missing number
+POST https://fkfso-phonebook.fly.dev/api/persons HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Name WithoutNumber",
+    "time": "Thu, 25 May 2023 17:53:00 GMT"
+}
+
+### Try POST with existing name
+POST https://fkfso-phonebook.fly.dev/api/persons HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Arto Hellas",
+    "number": "111111111111",
+    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+}
