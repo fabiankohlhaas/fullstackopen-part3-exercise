@@ -34,7 +34,11 @@ const Person = mongoose.model('Person', personSchema)
 if (process.argv.length===3) {
     Person.find({}).then(result => {
         result.forEach(person => {
-            console.log(person)
+            if (person.number) {
+                console.log(person.name, person.number)
+            } else {
+                console.log(person.name)
+            }    
         })
         mongoose.connection.close()
     }).catch(err => console.error(err))
