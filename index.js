@@ -64,42 +64,43 @@ app.delete('/api/persons/:id', (request, response) => {
 
 // Route to POST a new phonebook entry
 app.post('/api/persons', (request, response) => {
-const body = request.body
+  const body = request.body
 
-  if (!body.name) {
-      return response.status(400).json({ 
-      error: 'name missing' 
-      })
+  if (body.name === undefined) {
+    return response.status(400).json({ error: 'content missing' })
   }
 
-  if (!body.number) {
-    return response.status(400).json({ 
-    error: 'number missing' 
-    })
-  }
+  // if (!body.name) {
+  //     return response.status(400).json({ 
+  //     error: 'name missing' 
+  //     })
+  // }
 
-  if (persons.some(person => person.name === body.name)) {
-    return response.status(400).json({ 
-    error: 'name must be unique' 
-    })
-  }
+  // if (!body.number) {
+  //   return response.status(400).json({ 
+  //   error: 'number missing' 
+  //   })
+  // }
 
-  const person = {
-      id: generateId(),
+  // if (persons.some(person => person.name === body.name)) {
+  //   return response.status(400).json({ 
+  //   error: 'name must be unique' 
+  //   })
+  // }
+
+  const person = new Person({
       name: body.name,
       number: body.number
-  }
+  })
 
-  persons = persons.concat(person)
-
-  response.json(person)
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 })
 
 const PORT = process.env.PORT //|| 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
-
-// mongoose
 
 
