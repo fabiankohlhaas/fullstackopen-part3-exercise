@@ -17,13 +17,14 @@ app.use(cors())
 app.use(express.static('build'))
 
 // To get all entries in the phonebook
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (request, response, next) => {
   Person.find({}).then(persons => {
     response.json(persons)
   })
+  .catch(error => next(error))
 })
 
-// To get general informations about the API
+// TODO To get general informations about the API
 app.get("/api/info", (request, response) => {
   const date = new Date()
   const lenght = persons.length
@@ -33,7 +34,7 @@ app.get("/api/info", (request, response) => {
   )
 })
 
-// To get an individual entry by its ID
+// TODO To get an individual entry by its ID
 app.get("/api/persons/:id", (request, response) => {
   const id = Number(request.params.id)
   const person = persons.find((person) => {
@@ -56,7 +57,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
 })
 
 // Route to POST a new phonebook entry
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
   if (body.name === undefined) {
@@ -71,9 +72,22 @@ app.post('/api/persons', (request, response) => {
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
+  .catch(error => next(error))
 })
 
-const PORT = process.env.PORT //|| 3001
+const errorHandler = (error, request, response, next) => {
+  console.log(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformated id'})
+  }
+
+  next(error)
+}
+
+app.use(errorHandler)
+
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
