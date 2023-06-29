@@ -23,7 +23,6 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
-
 // To get general informations about the API
 app.get("/api/info", (request, response) => {
   const date = new Date()
@@ -48,19 +47,13 @@ app.get("/api/persons/:id", (request, response) => {
 })
 
 // To delete a phonebook entry
-app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  persons = persons.filter(note => note.id !== id)
-
-  response.status(204).end()
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
-
-// To generate IDs for HTTP POST
-// const generateId = () => {
-//   const newId = Math.floor(Math.random() * (10000 - 10) + 10)
-
-//   return newId
-// }
 
 // Route to POST a new phonebook entry
 app.post('/api/persons', (request, response) => {
@@ -69,24 +62,6 @@ app.post('/api/persons', (request, response) => {
   if (body.name === undefined) {
     return response.status(400).json({ error: 'content missing' })
   }
-
-  // if (!body.name) {
-  //     return response.status(400).json({ 
-  //     error: 'name missing' 
-  //     })
-  // }
-
-  // if (!body.number) {
-  //   return response.status(400).json({ 
-  //   error: 'number missing' 
-  //   })
-  // }
-
-  // if (persons.some(person => person.name === body.name)) {
-  //   return response.status(400).json({ 
-  //   error: 'name must be unique' 
-  //   })
-  // }
 
   const person = new Person({
       name: body.name,
