@@ -24,27 +24,29 @@ app.get('/api/persons', (request, response, next) => {
   .catch(error => next(error))
 })
 
-// TODO To get general informations about the API
-app.get("/api/info", (request, response) => {
+app.get("/api/info", (request, response, next) => {
   const date = new Date()
-  const lenght = persons.length
-  response.send(
-    `<p>Phonebook has info for ${lenght} people</p>
-    <p>${date}</p>`
-  )
+
+  Person.countDocuments({}).then(count => {
+    response.send(
+      `<p>Phonebook has info for ${count} people</p>
+      <p>${date}</p>`
+    )
+  })
+  .catch(error => next(error))
 })
 
-// TODO To get an individual entry by its ID
-app.get("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id)
-  const person = persons.find((person) => {
-    return person.id === id
-  })
-  if (person) {
-    response.json(person)
-  } else {
-    response.status(404).end()
-  }
+// To get an individual entry by its ID
+app.get("/api/persons/:id", (request, response, next) => {
+  Person.findById(request.params.id)
+    .then(person => {
+      if (person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
 // To delete a phonebook entry
@@ -96,7 +98,7 @@ const errorHandler = (error, request, response, next) => {
   console.log(error.message)
 
   if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformated id'})
+    return response.status(400).send({ error: 'something went wrong'})
   }
 
   next(error)
