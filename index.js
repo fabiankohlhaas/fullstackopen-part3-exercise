@@ -1,13 +1,13 @@
 require('dotenv').config()
-const express = require("express")
-const morgan = require("morgan")
-const cors = require("cors")
-const Person = require("./models/person")
+const express = require('express')
+const morgan = require('morgan')
+const cors = require('cors')
+const Person = require('./models/person')
 
 // Custom morgan token to display the data of arequest
 morgan.token('body', (req) => {
-  return JSON.stringify(req.body);
-});
+  return JSON.stringify(req.body)
+})
 
 const app = express()
 
@@ -21,10 +21,10 @@ app.get('/api/persons', (request, response, next) => {
   Person.find({}).then(persons => {
     response.json(persons)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
-app.get("/api/info", (request, response, next) => {
+app.get('/api/info', (request, response, next) => {
   const date = new Date()
 
   Person.countDocuments({}).then(count => {
@@ -33,11 +33,11 @@ app.get("/api/info", (request, response, next) => {
       <p>${date}</p>`
     )
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 // To get an individual entry by its ID
-app.get("/api/persons/:id", (request, response, next) => {
+app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id)
     .then(person => {
       if (person) {
@@ -52,6 +52,7 @@ app.get("/api/persons/:id", (request, response, next) => {
 // To delete a phonebook entry
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
+    // eslint-disable-next-line no-unused-vars
     .then(result => {
       response.status(204).end()
     })
@@ -63,14 +64,14 @@ app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
   const person = new Person({
-      name: body.name,
-      number: body.number
+    name: body.name,
+    number: body.number
   })
 
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 
@@ -86,16 +87,16 @@ app.put('/api/persons/:id', (request, response, next) => {
       response.json(updatePerson)
     })
     .catch(error => next(error))
-  })
+})
 
 
 const errorHandler = (error, request, response, next) => {
   console.log(error.message)
 
   if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformated id'})
+    return response.status(400).send({ error: 'malformated id' })
   } else if (error.name === 'ValidationError') {
-    return response.status(400).json({error: error.message})
+    return response.status(400).json({ error: error.message })
   }
 
   next(error)
